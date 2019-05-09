@@ -4,6 +4,11 @@ public class BankNote {
     private String name;
     private Integer value;
 
+    public BankNote() {
+        this.name = null;
+        this.value = 0;
+    }
+
     public BankNote(String name, Integer value) {
         this.name = name;
         setValue(value);

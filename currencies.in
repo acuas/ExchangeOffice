@@ -1,8 +1,10 @@
-4
-1
-Dolar american
-6
-cent
+name,value,moneda,Bancnota
+Dolar american,1,cent,
+Dolar american,5,centi,
+Dolar american,10,centi,
+Dolar american,25,centi,
+Dolar american,50,centi,
+
 1
 centi
 5

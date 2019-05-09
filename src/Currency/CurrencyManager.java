@@ -1,11 +1,12 @@
 package Currency;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.*;
 
+import CSV.BanknoteCsvProcessor;
+import CSV.CoinCsvProcessor;
+import CSV.GenericCsvReader;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,6 +15,28 @@ import org.jsoup.select.Elements;
 
 // Service Implementation
 public class CurrencyManager implements CurrencyManagerInterface {
+    private static final List<String> COIN_FILES = Arrays.asList
+                                                  (
+                                                        "src/coinDolar.csv",
+                                                        "src/coinEuro.csv",
+                                                        "src/coinLira.csv",
+                                                        "src/coinRon.csv"
+                                                  );
+    private static final List<String> BANKNOTE_FILES = Arrays.asList
+                                                      (
+                                                              "src/banknoteDolar.csv",
+                                                              "src/banknoteEuro.csv",
+                                                              "src/banknoteLira.csv",
+                                                              "src/banknoteRon.csv"
+                                                      );
+
+    private static final List<String> CURRENCIES_NAME = Arrays.asList
+                                                       (
+                                                               "Dolar american",
+                                                               "Euro",
+                                                               "Lira sterlină",
+                                                               "RON"
+                                                       );
     private Set<Currency> currencies;
     private Map<Pair<Currency, Currency>, Double> currencyConverter;
 
@@ -38,68 +61,44 @@ public class CurrencyManager implements CurrencyManagerInterface {
         throw new Error("Currency not found!");
     }
 
+    private List<Coin> readUtilCoin(String fileCoin) {
+        List<String> orderCoins = new ArrayList<>();
+        orderCoins.add("name");
+        orderCoins.add("value");
+
+        GenericCsvReader<Coin> readerCoins = new GenericCsvReader<>(Coin.class, fileCoin, true)
+                .setOrder(orderCoins)
+                .read()
+                .process(new CoinCsvProcessor());
+        List<Coin> coins = new ArrayList<>(readerCoins.getData());
+        coins.sort(new CoinComparator());
+        return coins;
+    }
+
+    private List<BankNote> readUtilBankNotes(String fileBankNote) {
+        List<String> orderCoins = new ArrayList<>();
+        orderCoins.add("name");
+        orderCoins.add("value");
+
+        GenericCsvReader<BankNote> readerCoins = new GenericCsvReader<>(BankNote.class, fileBankNote, true)
+                .setOrder(orderCoins)
+                .read()
+                .process(new BanknoteCsvProcessor());
+
+        List<BankNote> bankNotes = new ArrayList<>(readerCoins.getData());
+        bankNotes.sort(new BankNoteComparator());
+        return bankNotes;
+    }
+
     public void readCurrenciesFromFile() {
-        File file = new File("currencies.in");
-        // Using Scanner for getting input from file
-
-        Scanner in = null;
-        boolean opened = true;
-        try {
-            in = new Scanner(file);
-        }
-        catch (FileNotFoundException e) {
-            opened = false;
-            e.printStackTrace();
-        }
-        finally {
-            if (opened) {
-                Integer nOfCurrencies = in.nextInt();
-                for (Integer j = 0; j < nOfCurrencies; ++j) {
-                    Integer option = in.nextInt();
-                    in.nextLine();
-                    String currencyName = in.nextLine();
-
-                    Integer stabilityInValue = 0;
-                    if (option == 2) {
-                        stabilityInValue = in.nextInt();
-                    } else if (option != 1) {
-                        System.out.println("Throw exception here");
-                    }
-
-                    Integer nOfCoins = in.nextInt();
-                    in.nextLine();
-                    List<Coin> coins = new ArrayList<>(nOfCoins);
-
-                    for (Integer i = 0; i < nOfCoins; ++i) {
-                        String coinsName = in.nextLine();
-                        Integer value = in.nextInt();
-                        in.nextLine();
-                        coins.add(new Coin(coinsName, value));
-                    }
-
-                    coins.sort(new CoinComparator());
-
-                    Integer nOfBankNotes = in.nextInt();
-                    in.nextLine();
-                    List<BankNote> bankNotes = new ArrayList<>(nOfBankNotes);
-
-                    for (Integer i = 0; i < nOfBankNotes; ++i) {
-                        String bankNotesName = in.nextLine();
-                        Integer value = in.nextInt();
-                        in.nextLine();
-                        bankNotes.add(new BankNote(bankNotesName, value));
-                    }
-
-                    bankNotes.sort(new BankNoteComparator());
-
-                    if (option == 2) {
-                        currencies.add(new HardCurrency(currencyName, coins, bankNotes, stabilityInValue));
-                    } else {
-                        currencies.add(new Currency(currencyName, coins, bankNotes));
-                    }
-                }
-                in.close();
-            }
+        for (Integer i = 0; i < COIN_FILES.size(); ++i) {
+            currencies.add(
+                    new Currency(
+                            CURRENCIES_NAME.get(i),
+                            readUtilCoin(COIN_FILES.get(i)),
+                            readUtilBankNotes(BANKNOTE_FILES.get(i))
+                    )
+            );
         }
     }
 

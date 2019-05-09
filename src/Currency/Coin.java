@@ -4,6 +4,11 @@ public class Coin {
     private String name;
     private Double value;
 
+    public Coin() {
+        this.name = null;
+        this.value = 0d;
+    }
+
     public Coin(String name, Integer value) {
         this.name = name;
         setValue(value);

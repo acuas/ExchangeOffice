@@ -1,11 +1,15 @@
+import CSV.CsvWriterAudit;
 import Exchange.CurrencyExchange;
 import Transaction.Transaction;
 import Transaction.TransactionManager;
 import Transaction.TransactionManagerInterface;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
-import java.util.SortedMap;
+import java.util.TimeZone;
 
 public class Main {
 
@@ -13,6 +17,9 @@ public class Main {
         System.out.println("Bun venit la casa de schimb valutar Aurelu'!");
         CurrencyExchange currencyExchange = new CurrencyExchange();
         TransactionManagerInterface transaction = new TransactionManager();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
 
         Scanner in = new Scanner(System.in);
 
@@ -31,24 +38,31 @@ public class Main {
             switch (option) {
                 case 1:
                     System.out.println(currencyExchange.getManagerCurrency());
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Afisare valute", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 2:
                     currencyExchange.printCurrencyExchange();
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Afisare schimb valutar", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 3:
                     Transaction t = transaction.createTransaction(currencyExchange.getManagerCurrency());
                     transaction.processTransaction(t, currencyExchange.getManagerCurrency(), currencyExchange.getCurrencyExchange(), currencyExchange.getAmountCurrencyExchange());
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Creare tranzactie noua", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 4:
                     transaction.showHistory();
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Istoric tranzactii", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 5:
                     currencyExchange.updateCurrencyExchange();
+                    CsvWriterAudit.writeCsvFile("src/audit.csv", "Actualizare curs valutar", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 6:
                     currencyExchange.updateConverter();
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Actualizare convertor valutar", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 case 7:
+                    CsvWriterAudit.writeCsvFile("src/audit.csv","Exit", sdf.format(new Date(System.currentTimeMillis())));
                     break;
                 default:
                     System.out.println("Optiune invalida\n");
