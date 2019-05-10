@@ -5,6 +5,8 @@
       <root url="jar://$PROJECT_DIR$/javatuples-1.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../HelloWorld/src" />
+    </SOURCES>
   </library>
 </component>

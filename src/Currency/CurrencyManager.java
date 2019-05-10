@@ -7,6 +7,7 @@ import java.util.*;
 import CSV.BanknoteCsvProcessor;
 import CSV.CoinCsvProcessor;
 import CSV.GenericCsvReader;
+import DatabaseManagement.ReadDatabase;
 import org.javatuples.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,19 +16,20 @@ import org.jsoup.select.Elements;
 
 // Service Implementation
 public class CurrencyManager implements CurrencyManagerInterface {
-    private static final List<String> COIN_FILES = Arrays.asList
+    private static final List<String> COIN_TABLES = Arrays.asList
                                                   (
-                                                        "src/coinDolar.csv",
-                                                        "src/coinEuro.csv",
-                                                        "src/coinLira.csv",
-                                                        "src/coinRon.csv"
+                                                        "coin_dolar",
+                                                        "coin_euro",
+                                                        "coin_lira",
+                                                        "coin_ron"
                                                   );
-    private static final List<String> BANKNOTE_FILES = Arrays.asList
+
+    private static final List<String> BANKNOTE_TABLES = Arrays.asList
                                                       (
-                                                              "src/banknoteDolar.csv",
-                                                              "src/banknoteEuro.csv",
-                                                              "src/banknoteLira.csv",
-                                                              "src/banknoteRon.csv"
+                                                              "banknote_dolar",
+                                                              "banknote_euro",
+                                                              "banknote_lira",
+                                                              "banknote_ron"
                                                       );
 
     private static final List<String> CURRENCIES_NAME = Arrays.asList
@@ -91,12 +93,14 @@ public class CurrencyManager implements CurrencyManagerInterface {
     }
 
     public void readCurrenciesFromFile() {
-        for (Integer i = 0; i < COIN_FILES.size(); ++i) {
+        ReadDatabase<Coin> coinReader = new ReadDatabase<>(Coin.class);
+        ReadDatabase<BankNote> banknoteReader = new ReadDatabase<>(BankNote.class);
+        for (Integer i = 0; i < COIN_TABLES.size(); ++i) {
             currencies.add(
                     new Currency(
                             CURRENCIES_NAME.get(i),
-                            readUtilCoin(COIN_FILES.get(i)),
-                            readUtilBankNotes(BANKNOTE_FILES.get(i))
+                            coinReader.readFromDatabase(COIN_TABLES.get(i)),
+                            banknoteReader.readFromDatabase(BANKNOTE_TABLES.get(i))
                     )
             );
         }
