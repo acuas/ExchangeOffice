@@ -102,6 +102,20 @@ public class CurrencyExchange {
         }
     }
 
+    public List<Pair<String, String>> getCurrencyExchangePair() {
+        List<Pair<String, String>> ExchangePairs = new ArrayList<>();
+        currencyExchange.forEach((k, v) -> {
+            ExchangePairs.add(new Pair<>
+                    (
+                        "Vanzare : 1 " + k.getValue0().getName() + " = " + v.getValue0() + " " + k.getValue1().getName() + "\n",
+                        "Cumparare : 1 " + k.getValue0().getName() + " = " + v.getValue1() + " " + k.getValue1().getName() + "\n"
+                    )
+            );
+        });
+
+        return ExchangePairs;
+    }
+
     // print currencyExchange
     public void printCurrencyExchange() {
         currencyExchange.forEach((k, v) -> {

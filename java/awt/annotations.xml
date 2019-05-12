@@ -1,0 +1,5 @@
+<root>
+    <item name='java.awt.Component void add(java.awt.PopupMenu)'>
+        <annotation name='java.lang.Deprecated'/>
+    </item>
+</root>
