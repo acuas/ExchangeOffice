@@ -17,6 +17,10 @@ public class Transaction {
     private Currency secondCurrency;
     private Triplet<List<Pair<Integer, BankNote>>, List<Pair<Integer, Coin>>, Double> amountInBankNotesAndCoins;
 
+    public Transaction() {
+
+    }
+
     public Transaction(Client client,
                        Currency firstCurrency,
                        Currency secondCurrency,
@@ -47,5 +51,25 @@ public class Transaction {
 
     public Triplet<List<Pair<Integer, BankNote>>, List<Pair<Integer, Coin>>, Double> getAmountInBankNotesAndCoins() {
         return amountInBankNotesAndCoins;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setTypeOfTransaction(Boolean typeOfTransaction) {
+        this.typeOfTransaction = typeOfTransaction;
+    }
+
+    public void setFirstCurrency(Currency firstCurrency) {
+        this.firstCurrency = firstCurrency;
+    }
+
+    public void setSecondCurrency(Currency secondCurrency) {
+        this.secondCurrency = secondCurrency;
+    }
+
+    public void setAmountInBankNotesAndCoins(Triplet<List<Pair<Integer, BankNote>>, List<Pair<Integer,Coin>>, Double> amountInBankNotesAndCoins) {
+        this.amountInBankNotesAndCoins = amountInBankNotesAndCoins;
     }
 }

@@ -13,6 +13,9 @@ public class ReadDatabase<T> {
     private Class<T> genericType;
     private boolean initCompleted;
 
+    private String username = "sys as sysdba";
+    private String password = "Oradoc_db1";
+
     public ReadDatabase(final Class<T> type) {
         this.genericType = type;
         initialize();
@@ -26,7 +29,7 @@ public class ReadDatabase<T> {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             // Making a connection
             Connection con = DriverManager.getConnection
-                    ("jdbc:oracle:thin:@//0.0.0.0:32769/ORCLCDB.localdomain", "sys as sysdba", "Oradoc_db1");
+                    ("jdbc:oracle:thin:@//0.0.0.0:32769/ORCLCDB.localdomain", username, password);
             // Creating a Statement object for our DB Connection
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery("SELECT name, value FROM " + table_name);
